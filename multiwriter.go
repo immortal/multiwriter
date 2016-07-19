@@ -1,13 +1,41 @@
 package multiwriter
 
-import "io"
+import (
+	"io"
+	"sync"
+)
 
-type multiWriter struct {
+type MultiWriter struct {
+	sync.Mutex
 	writers []io.Writer
 }
 
+// Append writer
+func (self *MultiWriter) Append(writers ...io.Writer) {
+	self.Lock()
+	defer self.Unlock()
+	self.writers = append(self.writers, writers...)
+}
+
+// Remove writer
+func (self *MultiWriter) Remove(writers ...io.Writer) {
+	self.Lock()
+	defer self.Unlock()
+	for i := len(self.writers) - 1; i > 0; i-- {
+		for _, v := range writers {
+			if self.writers[i] == v {
+				self.writers = append(self.writers[:i], self.writers[i+1:]...)
+				break
+			}
+		}
+	}
+}
+
 // Write implements io.Writer
-func (self *multiWriter) Write(p []byte) (n int, err error) {
+func (self *MultiWriter) Write(p []byte) (n int, err error) {
+	self.Lock()
+	defer self.Unlock()
+
 	type result struct {
 		n   int
 		err error
@@ -34,9 +62,9 @@ func (self *multiWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-// New return a multiWriter
+// New return a MultiWriter
 func New(writers ...io.Writer) io.Writer {
 	w := make([]io.Writer, len(writers))
 	copy(w, writers)
-	return &multiWriter{w}
+	return &MultiWriter{writers: w}
 }
