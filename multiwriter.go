@@ -31,6 +31,11 @@ func (self *MultiWriter) Remove(writers ...io.Writer) {
 	}
 }
 
+// Len of writers
+func (self *MultiWriter) Len() int {
+	return len(self.writers)
+}
+
 // Write implements io.Writer
 func (self *MultiWriter) Write(p []byte) (n int, err error) {
 	self.Lock()
