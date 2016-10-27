@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/immortal/multiwriter.svg?branch=master)](https://travis-ci.org/immortal/multiwriter)
-[![Coverage Status](https://coveralls.io/repos/github/immortal/multiwriter/badge.svg?branch=master)](https://coveralls.io/github/immortal/multiwriter?branch=master)
+[![codecov](https://codecov.io/gh/immortal/multiwriter/branch/master/graph/badge.svg)](https://codecov.io/gh/immortal/multiwriter)
+
 
 # multiwriter
 Concurrent writer that duplicates its writes to all the provided writers,
