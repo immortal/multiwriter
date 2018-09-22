@@ -6,7 +6,7 @@ import (
 )
 
 type MultiWriter struct {
-	sync.Mutex
+	sync.RWMutex
 	writers []io.Writer
 }
 
@@ -33,6 +33,8 @@ func (self *MultiWriter) Remove(writers ...io.Writer) {
 
 // Len of writers
 func (self *MultiWriter) Len() int {
+	self.RLock()
+	defer self.RUnlock()
 	return len(self.writers)
 }
 
